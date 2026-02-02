@@ -67,13 +67,22 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 
 [Skriv ditt svar her]
 
+INNER JOIN - returnerer kun de radene hvor det finnes en match i begge tabellene
+LEFT JOUN - Returnerer alle rader fra ventstre tabell, selv om det ikke finnes match i høyre tabell
+
 ---
 
+
 ### Spørsmål 2: Hvorfor bruker vi fremmednøkler? Hva skjer hvis du prøver å slette et program som har studenter?
+
 
 **Ditt svar:**
 
 [Skriv ditt svar her]
+
+En fremmednøkkel er en kolonne i en tabell som refererer til primærnøkkelen i en annen tabell.
+Fremmednøkler brukes for å sikre referanseintegritet i databasen. de sørger for at en kolonne i en tabell kun kan referere til eksisterende verdier i en annen tabell, og hindrer at det oppstår "løse" eller inkonsistente data.
+Hvis man prøver å slette et program som det finnes studenter til, vil databasen som standard blokkere slettingen og gi en feilmelding, fordi det finnes referanser fra studenter til programmet. (Med mindre fremmednøkkkelen er definert med ON DELETE CASCADE eller ON DELETE SET NULL)
 
 ---
 
@@ -82,14 +91,18 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 **Ditt svar:**
 
 [Skriv ditt svar her]
-
 ---
+GROUP BY - grupperer rader i en tabell etter en eller flere kolonner, slik at aggregatfunksjoner som COUNT; SUM, AVG; MAX, MIN kan begrenses for hver gruppe.
+Det er nødvendig fordi aggregatfunksjoner ellers ville beregnet en samlet verdi for hele tabellen, og GROUP BY lar deg få resultat per gruppe, for eksempel antall studenter per program eller gjennomsnittskarakter per emne. 
+
 
 ### Spørsmål 4: Hva er en indeks og hvorfor er den viktig for ytelse?
 
 **Ditt svar:**
 
 [Skriv ditt svar her]
+En indeks er en datastruktur som gjør det raskere å finne rader i en tabell basert på en eller flere kolonner, omtrent som et innholdsregister i en bok. 
+Den er viktig for ytelse fordi søk, filtrering og join-operasjoner kan gå mye raskere, spesielt i store tabeller, uten å måtte lese alle radene sekvensielt. 
 
 ---
 
@@ -100,6 +113,13 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 [Skriv ditt svar her]
 
 ---
+For å optimalisere en treg spørring kan man:
+1. Bruke indekser på kolonner som brukes i WHERE, JOIN eller ORDER BY
+2. Redusere antall rader som behandles, f.eks med WHERE-filtre eller LIMIT
+3. Unngå unødvendig JOINS eller subqueries
+4. Velge bare nødvendige kolonner i stedet for SELECT *
+5. Se på spørringsplanen (EXPLAIN) for å identifisere flaskehalser
+6. Kort sagt: Fokus på å minimere datamengde og gjøre søk raskere
 
 ## Oppgave 3: Brukeradministrasjon og GRANT
 
