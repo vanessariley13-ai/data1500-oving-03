@@ -1,4 +1,4 @@
-1. **Hent alle studenter som ikke har noen emneregistreringer**
+-- 1. **Hent alle studenter som ikke har noen emneregistreringer**
     SELECT
         s.fornavn,
         s.etternavn
@@ -10,7 +10,7 @@
 
 
 
-2. **Hent alle emner som ingen studenter er registrert på**
+-- 2. **Hent alle emner som ingen studenter er registrert på**
     SELECT fornavn, etternavn, emne_navn AS emne, registrert_dato
     FROM emneregistreringer em
         JOIN studenter s
@@ -22,7 +22,7 @@
 
 
 
-3. **Hent studentene med høyeste karakter per emne**
+-- 3. **Hent studentene med høyeste karakter per emne**
     SELECT fornavn, etternavn, emne_navn, emne_kode, karakter
     FROM emneregistreringer em
         JOIN studenter s
@@ -33,7 +33,7 @@
 
 
 
-4. **Lag en rapport som viser hver student, deres program, og antall emner de er registrert på**
+-- 4. **Lag en rapport som viser hver student, deres program, og antall emner de er registrert på**
     SELECT fornavn, etternavn, emne_kode,emne_navn,program_navn
     FROM emneregistreringer em
         JOIN studenter s
@@ -46,7 +46,7 @@
 
 
 
-5. **Hent alle studenter som er registrert på både DATA1500 og DATA1100**
+-- 5. **Hent alle studenter som er registrert på både DATA1500 og DATA1100**
     SELECT
         s.fornavn,
         s.etternavn,
