@@ -12,7 +12,7 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 
 [Skriv ditt svar her]
 
----
+---Docker gjør PostgreSQL-portabelt, isoler, enkelt å statte/stopp, og holder masinen din ren
 
 ### Spørsmål 2: Hva betyr "persistent volum" i docker-compose.yml? Hvorfor er det viktig?
 
@@ -20,7 +20,7 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 
 [Skriv ditt svar her]
 
----
+---Et persistent volum er databasen sin sin "harddisk" utenfor containeren. Det er viktig fordi det gjør at dataene dine ikke forsviner når du stopper, oppdaterer eller sletter containeren.
 
 ### Spørsmål 3: Hva skjer når du kjører `docker-compose down`? Mister du dataene?
 
@@ -28,7 +28,7 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 
 [Skriv ditt svar her]
 
----
+---Når du kjører docker-compose down, stopper og sletter containeren definert i docker-compose.yml. som standard sletter den ikke volumene, med mindre du spesifiderer -v. Altså kun docker-compose down sletter container, volumer beholdes og data er trygg. 
 
 ### Spørsmål 4: Forklar hva som skjer når du kjører `docker-compose up -d` første gang vs. andre gang.
 
@@ -36,7 +36,20 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 
 [Skriv ditt svar her]
 
----
+---Første gang du kjører docker-compose up -d
+-Dosker sjekker docker-compose.yml og ser hvilke services som skal kjøres
+-For hver service:
+1.Hvis bildet ikke finnes lokalt, laser Docker det ned fra Docker Hub
+2.Docker lager en ny container basert på bildet
+3.Hvis du har definert et volum, opprettes det og kobles til containeren
+4.Containeren startes i bakgrunnen
+
+---Andre gang du kjører docker-compose up -d
+-Docker sjekker docker-compose.yml igjen
+-Containeren finnes allerede (fra første gang), så:
+1.Hvis det ikke er endringer i docker-compose.yml eller bildet, gjenbrukes eksisterende containere -> de startes på nytt
+2.Hvis bildet er oppdatert, kan Docker oppgradere containeren
+3.Volumene er allerede opprettet -> dataene dine beholdes 
 
 ### Spørsmål 5: Hvordan ville du delt docker-compose.yml-filen med en annen student? Hvilke sikkerhetshensyn må du ta?
 
@@ -44,7 +57,7 @@ Skriv dine svar på refleksjonsspørsmålene fra hver oppgave her.
 
 [Skriv ditt svar her]
 
----
+---Del docker-compose.yml via Git eller annen deling, men aldri med ekte passord eller hemmelige nøkler. Bruk .env-filer og eksempelfiler for sikker deling.
 
 ## Oppgave 2: SQL-spørringer og databaseskjema
 
