@@ -130,6 +130,15 @@ For å optimalisere en treg spørring kan man:
 [Skriv ditt svar her]
 
 ---
+En bruker, rolle eller prosess skal kun ha de rettighetene som er nødvendige for å utføre sine oppgaver -ikke mer.
+Prinsippet om minste rettighet betyr at brukere og systemer kun får tilgang til det de trenger.
+Dette reduserer risiko for feil og sikkerhetsbrudd
+    - Reduserer risiko for feil: Hvis en bruker eller prosess gjør en feil, vil kun de ha tilgang til bli påvirket
+    - Reduserer skade ved angrep: Hvis en rolle blir kompromittert, kan angriperen kunne gjøre skade på det minimale tilgang tillater
+    - Overholdelse av sikkerhetspolicy: Mange standarder krever at brukeren ikke har unøvendige rettigheter 
+
+
+
 
 ### Spørsmål 2: Hva er forskjellen mellom en bruker og en rolle i PostgreSQL?
 
@@ -138,6 +147,10 @@ For å optimalisere en treg spørring kan man:
 [Skriv ditt svar her]
 
 ---
+Rolle: En samling rettigheter i PostgreSQL. Kan brukes som gruppe eller tildeles priviligier. Kan, men trenger ikke, logge inn.
+    -Den kan ha retigheter som: SELECT, INSERT; UPDATE på tabeller, opprette databaser, lage andre roller
+Bruker: En rolle med LOGIN-rettighet. Alle brukere er roller, men ikke alle roller er brukere. 
+    -Altså brukere er roller som kan logge inn 
 
 ### Spørsmål 3: Hvorfor er det bedre å bruke roller enn å gi rettigheter direkte til brukere?
 
@@ -146,6 +159,11 @@ For å optimalisere en treg spørring kan man:
 [Skriv ditt svar her]
 
 ---
+Roller gjør det lettere å administrere rettigheter, sikre konsistens og gjør systemet mer skalerbart
+1.Enklere administrasjon: Gi rettigheter til en rolle, og legg brukere til rollen i stedet for å endre hver bruker individuelt
+2.Konsistens: Alle brukere med samme rolle får samme rettigheter, ingen risiko for at noen får for me eller for lite. 
+3.Skalerbart: Når nye brukere legges til, trenger du kun å tilordne riktig rolle, i stedet for å gi rettigheter en og en. 
+
 
 ### Spørsmål 4: Hva skjer hvis du gir en bruker `DROP` rettighet? Hvilke sikkerhetsproblemer kan det skape?
 
@@ -154,14 +172,49 @@ For å optimalisere en treg spørring kan man:
 [Skriv ditt svar her]
 
 ---
+DROP gir lov til å slette hele databser tabeller, eller andre objekter 
+DROP gir full slettemakt på databaser/tabeller. Det kan føre til datatap, systemfeil og sikkerhetsrisiko hvis rollen misbrukes 
+Sikkerhetsproblemer: 
+1.Datatap: Kritiske tabeller eller databaser kan slettes ved et uhell eller med vilje.
+2.Systemstabilitet: Applikasjoner som avhenger av tabellene kan slutte å fungere
+3.Rollemisbruk: Hvis kontoen kompromitteres, kan angriperen slette alt. 
 
 ### Spørsmål 5: Hvordan ville du implementert at en student bare kan se sine egne karakterer, ikke andres?
+
 
 **Ditt svar:**
 
 [Skriv ditt svar her]
 
 ---
+
+1.Lag en rolle for studenten
+
+CREATE ROLE student_self_view
+LOGIN
+PASSWORD 'pass123';
+
+2.Lag et view som filtrerer på current_user
+
+CREATE VIEW karakterer_self AS
+SELECT k.student_id, k.emne_id, k.karakter
+FROM karakterer k
+JOIN studenter s ON k.student_id = s.student_id
+WHERE s.brukernavn = current_user;
+
+3.Gi SELECT-tilgang til rollen
+
+GRANT SELECT ON karakterer_self TO student_self_view;
+
+4.Test: Resultatet vil være kun studentens egne karakterer
+
+SET ROLE student_self_view;
+SELECT * FROM karakterer_self;
+
+
+
+
+
 
 ## Notater og observasjoner
 

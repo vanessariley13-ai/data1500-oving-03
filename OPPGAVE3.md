@@ -41,7 +41,7 @@ GRANT <rettigheter> ON <objekt> TO <bruker/rolle>;
 Databasen har allerede tre roller opprettet. Verifiser dem (kan også vurdere å bruke pgAdmin eller DBeaver:
 
 ```bash
-	$ docker-compoes exec postgres psql -U admin -d data1500_db
+	$ docker-compose exec postgres psql -U admin -d data1500_db
 ```
 
 Passord: `admin123`
@@ -81,14 +81,14 @@ VALUES ('Test', 'Bruker', 'test@example.com', 1);
 DELETE FROM studenter WHERE student_id = 1;
 ```
 
-Hva skjer? Dokumenter resultatene.
+Hva skjer? Dokumenter resultatene. - Output: Permission denied for table studenter 
 
 ### Del 3: Test tilgang som student
 
 Åpne en ny terminal og koble til som student:
 
 ```bash
-	docker-compose exec psql -U student_role -d data1500_db
+	docker-compose exec postgres psql -U student_role -d data1500_db
 ```
 
 Passord: `student_pass`
@@ -102,9 +102,14 @@ SELECT * FROM studenter;
 -- Skal IKKE fungere (INSERT)
 INSERT INTO studenter (fornavn, etternavn, epost, program_id) 
 VALUES ('Test', 'Bruker', 'test@example.com', 1);
+ 
+Resultat: ERROR:  permission denied for table studenter 
+
 
 -- Skal IKKE fungere (UPDATE)
 UPDATE studenter SET fornavn = 'Ola' WHERE student_id = 1;
+
+Reaultat: permission denied for table studenter
 ```
 
 Hva skjer? Dokumenter resultatene.
@@ -147,6 +152,7 @@ SELECT * FROM emner;
 
 -- Skal IKKE fungere
 SELECT * FROM studenter;
+ERROR:  permission denied for table studenter
 ```
 
 ### Del 5: Opprett rolle med UPDATE-rettighet
@@ -186,7 +192,7 @@ WHERE registrering_id = 1;
 -- Skal IKKE fungere (DELETE)
 DELETE FROM emneregistreringer WHERE registrering_id = 1;
 ```
-
+output: ERROR:  permission denied for table emneregistreringer
 ### Del 6: Revoke-rettigheter
 
 Fjern UPDATE-rettighet fra foreleser_role:
