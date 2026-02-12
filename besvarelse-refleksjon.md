@@ -213,9 +213,6 @@ SELECT * FROM karakterer_self;
 
 
 
-
-
-
 ## Notater og observasjoner
 
 Bruk denne delen til å dokumentere interessante funn, problemer du møtte, eller andre observasjoner:
@@ -226,19 +223,46 @@ Bruk denne delen til å dokumentere interessante funn, problemer du møtte, elle
 ## Oppgave 4: Brukeradministrasjon og GRANT
 
 1. **Hva er Row-Level Security og hvorfor er det viktig?**
-   - Svar her...
+   - Row_Level SEcurity (RLS) er en mekanisme i databaser som gjør at man kan kontrollere hvilke rader en bruker har lov til å se eller endre i en tabell
+   - Hvorfor er RLS viktig?
+     - Sikkerhet - brukere kan ikke se data de ikke skal ha tilgang til.
+     - Personvern
+     - Hindre datalekkasjer 
+     
 
 2. **Hva er forskjellen mellom RLS og kolonnebegrenset tilgang?**
-   - Svar her...
+   - RLS bestemmer hvilke rader en bruker kan se eller endre, mens kolonnebegrenset tilgagn bestemmer hvilke kolonner brukeren kan se. RLS beskytter data på radnivå, mens kolonnebegrensning beskytter sensitive felt som personnummer eller lønn. 
+   - ofte brukes begge sammen for full sikkerhet
 
-3. **Hvordan ville du implementert at en student bare kan se karakterer for sitt eget program?**
-   - Svar her...
+
+3. **Hvordan ville du implementert at en student bare kan se karakterer for sitt eget program?s**
+   - #Aktiverer RLS på emneregistreringer
+   - ALTER TABLE emneregistreringer ENABLE ROW LEVEL SECURITY;
+
+   - #Opprett RLS-policy for studenter. Studenter ser bare sin egne karakterer
+   - CREATE POLICY student_see_own_grade ON emneregistreringer 
+     FOR SELECT 
+     USING
+     student_id = (
+     SELECT student_id FROM bruker_student_mapping
+     WHERE brukernavn = current_user
+     )); 
+   
+   - #Verifiser policyen
+   - SELECT * FROM pg_policies WHERE tablename = "emneregistreringer"
 
 4. **Hva er sikkerhetsproblemene ved å bruke views i stedet for RLS?**
-   - Svar her...
+   - View: en lagret SELECT-spørringm views filtrerer data, men gir ikke ekte radnivå-sikkerhet. 
+   - RLS = Sikkerhetsregel som styrer hvilke rader en bruker faktisk får lov til å se. RLS håndhever sikkerhet direkte på tabellen og kan ikke omgås via alternative spørringer. 
 
 5. **Hvordan ville du testet at RLS-policyer fungerer korrekt?**
-   - Svar her...
+   - Teste med ulike roller (vanlig bruker, admin, annen bruker(som ikke skal ha tilgang)
+   - TEST alle operasjoner: SELECT, INSERT, UPDATE, DELETE 
+   - Test det som skal feile: 
+     - Kan bruker oppdatere andres rader?
+     - Kan bruker slette andres data?
+     - Kan bruker manipulere WHERE-betingelser? 
+   - Verfiser at RLS faktisk er aktivert 
 
 ---
 
